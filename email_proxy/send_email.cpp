@@ -26,8 +26,7 @@ send_email::send_email(QWidget *parent) :
     connect(m_socket, &QTcpSocket::readyRead, this, [] () {
         qDebug() << "有数据可读";
     });
-
-    sendEmail();
+//    sendEmail();
 }
 
 void send_email::sendEmail(){

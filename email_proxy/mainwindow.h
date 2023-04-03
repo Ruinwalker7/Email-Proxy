@@ -2,21 +2,42 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QComboBox>
+#include <QWidgetAction>
 
-namespace Ui {
-class MainWindow;
-}
+#include "DockManager.h"
+#include "DockAreaWidget.h"
+#include "DockWidget.h"
 
-class MainWindow : public QMainWindow
+QT_BEGIN_NAMESPACE
+namespace Ui { class CMainWindow; }
+QT_END_NAMESPACE
+
+class CMainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    CMainWindow(QWidget *parent = nullptr);
+    ~CMainWindow();
+
+protected:
+    virtual void closeEvent(QCloseEvent* event) override;
 
 private:
-    Ui::MainWindow *ui;
-};
+    QAction* SavePerspectiveAction = nullptr;
+    QWidgetAction* PerspectiveListAction = nullptr;
+    QComboBox* PerspectiveComboBox = nullptr;
 
+    Ui::CMainWindow *ui;
+
+    ads::CDockManager* DockManager;
+    ads::CDockAreaWidget* StatusDockArea;
+    ads::CDockWidget* TimelineDockWidget;
+
+    void createPerspectiveUi();
+
+private slots:
+    void savePerspective();
+};
 #endif // MAINWINDOW_H
