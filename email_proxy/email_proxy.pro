@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
-
+QT += network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = email_proxy
@@ -25,10 +25,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+    send_email.cpp
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+    send_email.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    send_email.ui
