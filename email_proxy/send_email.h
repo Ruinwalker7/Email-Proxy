@@ -24,7 +24,6 @@ public:
 private:
     Ui::send_email *ui;
     QTcpSocket *m_socket;
-    void OpenSocket();
     QString hostName;
     quint16 port;
     QByteArray  m_UserName="13728920416@163.com";
