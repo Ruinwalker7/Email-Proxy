@@ -6,10 +6,6 @@
 #include "QList"
 #include "QHash"
 
-//struct account{
-//    QString user,password;
-//};
-
 namespace Ui {
 class mainWidget;
 }

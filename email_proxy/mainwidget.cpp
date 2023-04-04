@@ -31,7 +31,6 @@ void mainWidget::on_tabWidget_tabCloseRequested(int index)
     ui->tabWidget->removeTab(index);
 }
 
-
 void mainWidget::updateAccounts(){
     controlFiles ctr;
     QStringList list;
@@ -53,13 +52,22 @@ void mainWidget::updateAccounts(){
 
         QAction *write  = new QAction();
         write->setText("写邮件");
+        QAction *receive = new QAction();
+        receive->setText("收件箱");
+
+        socket *sc = new socket(user.toUtf8(),password.toUtf8());
         send_email *email = new send_email();
         email->setUser(user,password);
         connect(write, &QAction::triggered,[=](bool check){
-          ui->tabWidget->addTab(email, QString("发送邮件"));
+          ui->tabWidget->addTab(email, QString("写邮件"));
          });
+        connect(receive, &QAction::triggered,[=](bool check){
+            sc->Pop3_receiver();
+         });
+
         menuSelection->addAction(write);
-        menuSelection->addAction("收件箱");
+        menuSelection->addAction(receive);
+
         toolBub->setText(user);
         toolBub->setPopupMode(QToolButton::InstantPopup);
         toolBub->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Preferred);
@@ -69,7 +77,6 @@ void mainWidget::updateAccounts(){
     }
 
 }
-
 
 void mainWidget::add()
 {

@@ -15,14 +15,19 @@ socket::socket(QByteArray _user,QByteArray _password){
     QString user = userName;
     QStringList list = user.split("@");//QString字符串分割函数
     stmp_addr = "smtp."+list[1];
+    pop3_addr = "pop." + list[1];
 }
+
+
 
 QString socket::WaitAndReadData()
 {
    m_socket->waitForReadyRead(1000);
-   QString m_ReceiverData =  m_socket->readAll();
+   QByteArray ReceiverData =  m_socket->readAll();
+   QString m_ReceiverData = QTextCodec::codecForName("GBK")->toUnicode(ReceiverData);
    qDebug()<< m_socket->state();
    qDebug() << m_ReceiverData;
+   qDebug() <<"拟合";
    return m_ReceiverData.mid(0,3);
 }
 
@@ -35,19 +40,37 @@ bool socket::sendEmail(QByteArray s_title, QByteArray s_Content, QByteArray send
     WaitAndReadData();
     m_socket->write("from:<"+userName+">\r\n");  //发送名称
     WaitAndReadData();
-    m_socket->write("to:<"+sendIp+">");  //接受名称
+    m_socket->write("to:<"+sendIp+">\r\n");  //接受名称
     WaitAndReadData();
-    m_socket->write("data\r\n");
-    WaitAndReadData();
-    m_socket->write("Subject:"+s_title+"\r\n");  //标题
+    m_socket->write("subject:"+s_title+"\r\n");  //标题
     m_socket->write("\r\n");
     m_socket->write(s_Content+"\r\n"); //内容
     m_socket->write(".\r\n");
     WaitAndReadData();
     m_socket->write("quit\r\n");
+    WaitAndReadData();
     return true;
 }
 
+bool socket::Pop3_receiver(){
+    int port = 110;
+    qDebug()<<pop3_addr;
+    m_socket->connectToHost(pop3_addr,port,QTcpSocket::ReadWrite);  //连接163邮箱
+    m_socket->waitForConnected(1000);
+    m_socket->waitForReadyRead(1000);
+    m_socket->write("user "+userName+"\r\n");  //写入用户名
+        WaitAndReadData();
+    m_socket->write("pass "+password+"\r\n");  //写入用户名
+        WaitAndReadData();
+    m_socket->write("stat\r\n");
+     WaitAndReadData();
+     m_socket->write("retr 2\r\n");
+        WaitAndReadData();
+     m_socket->write("quit\r\n");
+     WaitAndReadData();
+     return true;
+          WaitAndReadData();
+}
 
 bool socket::checkAccount(){
     int port = 25;
