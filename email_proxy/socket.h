@@ -7,6 +7,7 @@ class socket
 public:
     socket();
     socket(QString user,QString password);
+    bool sendEmail();
     bool checkAccount();
     QString WaitAndReadData();
     ~socket();

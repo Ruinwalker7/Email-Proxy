@@ -9,27 +9,13 @@ send_email::send_email(QWidget *parent) :
 {
     ui->setupUi(this);
     m_socket = new QTcpSocket(this);
-
-    /*下面是几种常用的信号，更多的信号可以查看QAbstractSocket和QIODevice文档*/
-    connect(m_socket, &QTcpSocket::connected, this, [] () {
-        qDebug() << "socket已连接";
-    });
-
-    connect(m_socket, &QTcpSocket::disconnected, this, [] () {
-        qDebug() << "socket已断开连接";
-    });
-
-    connect(m_socket, &QTcpSocket::stateChanged, this, [] (QAbstractSocket::SocketState socketState) {
-        qDebug() << "socket状态改变" << socketState;
-    });
-
-    connect(m_socket, &QTcpSocket::readyRead, this, [] () {
-        qDebug() << "有数据可读";
-    });
-//    sendEmail();
+    connect(ui->pushButton,&QPushButton::clicked,this,&send_email::sendEmail);
 }
 
 void send_email::sendEmail(){
+
+
+
      port = 25;
      m_socket->connectToHost("smtp.163.com",25,QTcpSocket::ReadWrite);  //连接163邮箱
      m_socket->waitForConnected(1000);
@@ -41,26 +27,32 @@ void send_email::sendEmail(){
      m_socket->write(m_UserName.toBase64()+"\r\n");  //写入用户名
     WaitAndReadData();
      m_socket->write(m_Password.toBase64()+"\r\n");  //写入密码
-    WaitAndReadData();
-//     m_socket->write("mail from: <"+m_UserName+">\r\n"); //发送的邮箱
-//    WaitAndReadData();
-//     m_socket->write("rcpt to: <"+sendIp+">\r\n"); //接收的邮箱
-//    WaitAndReadData();
-//     m_socket->write("data\r\n");  //开始写入
-//    WaitAndReadData();
-//     m_socket->write("from:<"+m_UserName+">\r\n");  //发送名称
-//    WaitAndReadData();
-//     m_socket->write("to:<"+sendIp+">");  //接受名称
-//    WaitAndReadData();
-//     m_socket->write("data\r\n");
-//    WaitAndReadData();
-//     m_socket->write("Subject:"+s_Title+"\r\n");  //标题
-//     m_socket->write("\r\n");
-//     m_socket->write(s_Content.append("\r\n")); //内容
-//     m_socket->write(".\r\n");
-//        WaitAndReadData();
-//     m_socket->write("quit\r\n");
-//     m_socket->disconnect();
+     WaitAndReadData();
+     m_socket->write("mail from: <"+m_UserName+">\r\n"); //发送的邮箱
+     WaitAndReadData();
+     m_socket->write("rcpt to: <"+sendIp+">\r\n"); //接收的邮箱
+     WaitAndReadData();
+     m_socket->write("data\r\n");  //开始写入
+     WaitAndReadData();
+     m_socket->write("from:<"+m_UserName+">\r\n");  //发送名称
+     WaitAndReadData();
+     m_socket->write("to:<"+sendIp+">");  //接受名称
+     WaitAndReadData();
+     m_socket->write("data\r\n");
+     WaitAndReadData();
+     m_socket->write("Subject:"+s_Title+"\r\n");  //标题
+     m_socket->write("\r\n");
+     m_socket->write(s_Content.append("\r\n")); //内容
+     m_socket->write(".\r\n");
+     WaitAndReadData();
+     m_socket->write("quit\r\n");
+     m_socket->disconnect();
+}
+
+void send_email::setUser(QString user,QString password){
+       m_UserName = user.toUtf8();
+       m_Password = password.toUtf8();
+
 }
 
 send_email::~send_email()

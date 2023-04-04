@@ -23,7 +23,7 @@
    <item>
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>TextLabel</string>
+      <string>输入邮箱密码</string>
      </property>
     </widget>
    </item>

@@ -21,6 +21,8 @@ public:
     ~send_email();
     void sendEmail();
     QString WaitAndReadData();
+    void setUser(QString user,QString password);
+
 private:
     Ui::send_email *ui;
     QTcpSocket *m_socket;

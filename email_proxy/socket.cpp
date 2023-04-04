@@ -8,16 +8,18 @@ socket::socket()
 
  socket::~socket(){
      m_socket->close();
- delete m_socket;
+     delete m_socket;
  }
 
 socket::socket(QString user,QString password){
-        m_socket = new QTcpSocket();
+    m_socket = new QTcpSocket();
     m_UserName = user;
     m_Password = password;
     QStringList list = user.split("@");//QString字符串分割函数
     stmp_addr = "smtp."+list[1];
 }
+
+bool sendEmail();
 
 QString socket::WaitAndReadData()
 {
