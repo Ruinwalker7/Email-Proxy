@@ -2,7 +2,7 @@
 #define MAINWIDGET_H
 
 #include <QWidget>
-
+#include "addaccount.h"
 namespace Ui {
 class mainWidget;
 }
@@ -17,6 +17,7 @@ public:
 
 private:
     Ui::mainWidget *ui;
+    void add();
 };
 
 #endif // MAINWIDGET_H
