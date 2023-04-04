@@ -18,6 +18,8 @@ mainWidget::mainWidget(QWidget *parent) :
     ui->setupUi(this);
     ui->tabWidget->setTabsClosable(true);
     this->updateAccounts();
+
+    //连接
     connect(ui->tabWidget, &QTabWidget::tabCloseRequested,this,&on_tabWidget_tabCloseRequested);
     connect(ui->add,&QPushButton::clicked,this,&mainWidget::add);
 }
@@ -29,34 +31,40 @@ void mainWidget::on_tabWidget_tabCloseRequested(int index)
     ui->tabWidget->removeTab(index);
 }
 
+
 void mainWidget::updateAccounts(){
     controlFiles ctr;
     QStringList list;
     ctr.updateAccount(&list);
+
+    //添加用户
     for(int i=0;i<list.size();i++){
         QString user,password;
         user=list[i];
         i++;
         password=list[i];
+
+        //map存储账户密码
         accounts.insert(user,password);
 
         send_email *send = new send_email();
-        QToolButton *toolB = new QToolButton();
+        QToolButton *toolBub = new QToolButton();
         QMenu *menuSelection = new QMenu();
 
         QAction *write  = new QAction();
         write->setText("写邮件");
         send_email *email = new send_email();
+        email->setUser(user,password);
         connect(write, &QAction::triggered,[=](bool check){
           ui->tabWidget->addTab(email, QString("发送邮件"));
          });
         menuSelection->addAction(write);
         menuSelection->addAction("收件箱");
-        toolB->setText(user);
-        toolB->setPopupMode(QToolButton::InstantPopup);
-        toolB->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Preferred);
-        toolB->setMenu(menuSelection);
-        ui->accountLayout->insertWidget(0,toolB);
+        toolBub->setText(user);
+        toolBub->setPopupMode(QToolButton::InstantPopup);
+        toolBub->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Preferred);
+        toolBub->setMenu(menuSelection);
+        ui->accountLayout->insertWidget(0,toolBub);
         this->update();
     }
 
@@ -66,6 +74,7 @@ void mainWidget::updateAccounts(){
 void mainWidget::add()
 {
     addAccount *adda = new addAccount();
+    adda->setWindowModality(Qt::ApplicationModal);
     adda->show();
 }
 

@@ -23,7 +23,7 @@ void addAccount::addUser(){
            QMessageBox::information(this,"提醒","请输入密码");
       }
     else{
-        socket *m_socket = new socket(user,password);
+        socket *m_socket = new socket(user.toUtf8(),password.toUtf8());
         qDebug() << "success";
         if(m_socket->checkAccount()){
             delete m_socket;

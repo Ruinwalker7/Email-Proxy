@@ -2,11 +2,9 @@
 #define SEND_EMAIL_H
 
 #include <QWidget>
-#include <windows.h>
 #include <stdio.h>
-#include <WinSock.h>
 #include <iostream>
-#include "QTcpSocket"
+#include <socket.h>
 
 namespace Ui {
 class send_email;
@@ -20,19 +18,18 @@ public:
     explicit send_email(QWidget *parent = 0);
     ~send_email();
     void sendEmail();
-    QString WaitAndReadData();
     void setUser(QString user,QString password);
 
 private:
+    socket* m_socket;
     Ui::send_email *ui;
-    QTcpSocket *m_socket;
     QString hostName;
     quint16 port;
-    QByteArray  m_UserName="13728920416@163.com";
-    QByteArray  m_Password = "KBBDYWFXLTOVLQSD";
-    QByteArray  sendIp ="973521624@qq.com";
-    QByteArray  s_Title="test";
-    QByteArray  s_Content="test";
+    QByteArray  m_UserName;
+    QByteArray  m_Password;
+    QByteArray  sendIp;
+    QByteArray  s_Title;
+    QByteArray  s_Content;
 };
 
 #endif // SEND_EMAIL_H

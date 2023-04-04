@@ -19,7 +19,7 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout" name="verticalLayout" stretch="5,1,1,1">
    <item>
     <widget class="QLabel" name="label">
      <property name="text">
@@ -29,6 +29,12 @@
    </item>
    <item>
     <widget class="QLineEdit" name="user">
+     <property name="font">
+      <font>
+       <family>黑体</family>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string>13728920416@163.com</string>
      </property>
@@ -36,6 +42,12 @@
    </item>
    <item>
     <widget class="QLineEdit" name="password">
+     <property name="font">
+      <font>
+       <family>黑体</family>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string>KBBDYWFXLTOVLQSD</string>
      </property>
@@ -43,6 +55,12 @@
    </item>
    <item>
     <widget class="QPushButton" name="pushButton">
+     <property name="font">
+      <font>
+       <family>黑体</family>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string>登录</string>
      </property>

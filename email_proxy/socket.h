@@ -1,18 +1,19 @@
 #ifndef SOCKET_H
 #define SOCKET_H
 #include "QTcpSocket"
+#include "qbytearray.h"
 
 class socket
 {
 public:
-    socket();
-    socket(QString user,QString password);
-    bool sendEmail();
+    socket(QByteArray user,QByteArray password);
+    bool sendEmail( QByteArray s_title, QByteArray s_Content, QByteArray sendIp);
     bool checkAccount();
     QString WaitAndReadData();
     ~socket();
 private:
-    QString m_UserName,m_Password,stmp_addr;
+    QByteArray userName,password;
+    QString stmp_addr;
     QTcpSocket *m_socket;
 
 };
