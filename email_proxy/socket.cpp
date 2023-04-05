@@ -1,8 +1,7 @@
 #include "socket.h"
 #include<QtNetwork>
 
-
- socket::~socket(){
+socket::~socket(){
      m_socket->disconnect();
      m_socket->close();
      delete m_socket;
@@ -19,15 +18,13 @@ socket::socket(QByteArray _user,QByteArray _password){
 }
 
 
-
 QString socket::WaitAndReadData()
 {
    m_socket->waitForReadyRead(1000);
    QByteArray ReceiverData =  m_socket->readAll();
-   QString m_ReceiverData = QTextCodec::codecForName("GBK")->toUnicode(ReceiverData);
+   QString m_ReceiverData = QTextCodec::codecForName("utf-8")->toUnicode(ReceiverData);
    qDebug()<< m_socket->state();
-   qDebug() << m_ReceiverData;
-   qDebug() <<"拟合";
+   qDebug() << m_ReceiverData.toLatin1();
    return m_ReceiverData.mid(0,3);
 }
 
@@ -52,6 +49,7 @@ bool socket::sendEmail(QByteArray s_title, QByteArray s_Content, QByteArray send
     return true;
 }
 
+
 bool socket::Pop3_receiver(){
     int port = 110;
     qDebug()<<pop3_addr;
@@ -59,18 +57,23 @@ bool socket::Pop3_receiver(){
     m_socket->waitForConnected(1000);
     m_socket->waitForReadyRead(1000);
     m_socket->write("user "+userName+"\r\n");  //写入用户名
-        WaitAndReadData();
+    WaitAndReadData();
     m_socket->write("pass "+password+"\r\n");  //写入用户名
-        WaitAndReadData();
+    WaitAndReadData();
     m_socket->write("stat\r\n");
      WaitAndReadData();
-     m_socket->write("retr 2\r\n");
-        WaitAndReadData();
+     m_socket->write("retr 1\r\n");
+     WaitAndReadData();
      m_socket->write("quit\r\n");
      WaitAndReadData();
-     return true;
-          WaitAndReadData();
+
+     QByteArray test = "572R5piT6YKu566x5biQ5Y+35a6J5YWo6YCa55+l";
+     qDebug()<<QByteArray::fromBase64(test);
+
+          //"572R5piT6YKu5Lu25Lit5b+D"
 }
+
+
 
 bool socket::checkAccount(){
     int port = 25;
@@ -81,7 +84,6 @@ bool socket::checkAccount(){
     if(m_socket->state()==QAbstractSocket::UnconnectedState){
         return false;
     }
-
     m_socket->write("helo localhost\r\n");
     WaitAndReadData();
     if(m_socket->state()==QAbstractSocket::UnconnectedState){
@@ -97,10 +99,10 @@ bool socket::checkAccount(){
     if(m_socket->state()==QAbstractSocket::UnconnectedState){
         return false;
     }
-
     m_socket->write(password.toBase64()+"\r\n");  //写入密码
        if(WaitAndReadData()=="535"){
        return false;
        };
     return true;
+
 }
