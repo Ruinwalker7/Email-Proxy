@@ -2,6 +2,8 @@
 #define SOCKET_H
 #include "QTcpSocket"
 #include "qbytearray.h"
+#include <QtNetwork>
+#include <emailreceive.h>
 
 class socket
 {
@@ -9,7 +11,7 @@ public:
     socket(QByteArray user,QByteArray password);
     bool sendEmail( QByteArray s_title, QByteArray s_Content, QByteArray sendIp);
     bool checkAccount();
-    bool Pop3_receiver();
+    bool Pop3_receiver(EmailReceive *receiver);
     QString WaitAndReadData();
     ~socket();
 private:

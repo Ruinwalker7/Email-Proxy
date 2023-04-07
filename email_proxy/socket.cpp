@@ -1,5 +1,4 @@
 #include "socket.h"
-#include<QtNetwork>
 
 socket::~socket(){
      m_socket->disconnect();
@@ -7,7 +6,7 @@ socket::~socket(){
      delete m_socket;
  }
 
-socket::socket(QByteArray _user,QByteArray _password){
+socket::socket(QByteArray _user, QByteArray _password){
     m_socket = new QTcpSocket();
     userName = _user;
     password = _password;
@@ -17,15 +16,13 @@ socket::socket(QByteArray _user,QByteArray _password){
     pop3_addr = "pop." + list[1];
 }
 
-
 QString socket::WaitAndReadData()
 {
    m_socket->waitForReadyRead(1000);
    QByteArray ReceiverData =  m_socket->readAll();
-   QString m_ReceiverData = QTextCodec::codecForName("utf-8")->toUnicode(ReceiverData);
    qDebug()<< m_socket->state();
-   qDebug() << m_ReceiverData.toLatin1();
-   return m_ReceiverData.mid(0,3);
+   qDebug() << ReceiverData;
+   return ReceiverData.mid(0,3);
 }
 
 bool socket::sendEmail(QByteArray s_title, QByteArray s_Content, QByteArray sendIp){
@@ -49,8 +46,7 @@ bool socket::sendEmail(QByteArray s_title, QByteArray s_Content, QByteArray send
     return true;
 }
 
-
-bool socket::Pop3_receiver(){
+bool socket::Pop3_receiver(EmailReceive *receiver){
     int port = 110;
     qDebug()<<pop3_addr;
     m_socket->connectToHost(pop3_addr,port,QTcpSocket::ReadWrite);  //连接163邮箱
@@ -60,20 +56,29 @@ bool socket::Pop3_receiver(){
     WaitAndReadData();
     m_socket->write("pass "+password+"\r\n");  //写入用户名
     WaitAndReadData();
+
     m_socket->write("stat\r\n");
-     WaitAndReadData();
-     m_socket->write("retr 1\r\n");
-     WaitAndReadData();
-     m_socket->write("quit\r\n");
-     WaitAndReadData();
-
-     QByteArray test = "572R5piT6YKu566x5biQ5Y+35a6J5YWo6YCa55+l";
-     qDebug()<<QByteArray::fromBase64(test);
-
-          //"572R5piT6YKu5Lu25Lit5b+D"
+    m_socket->waitForReadyRead(1000);
+    QByteArray ReceiverData = m_socket->readAll();
+    qDebug() << ReceiverData;
+    int emailNumbers = receiver->getEmailNum(ReceiverData);
+    qDebug() << emailNumbers;
+    for(int i=0;i<emailNumbers;i++){
+        QString send = "uidl"+QString::number(i)+"\r\n";
+        m_socket->write(send.toUtf8());
+        m_socket->waitForReadyRead(1000);
+        QByteArray Data = m_socket->readAll();
+        qDebug() << Data;
+        if(!receiver->isHaveEmail(Data)){
+            m_socket->write("retr "+i+"\r\n");
+            m_socket->waitForReadyRead(1000);
+            QByteArray emailData = m_socket->readAll();
+            receiver->analyseEmail(emailData);
+        }
+    }
+    m_socket->write("quit\r\n");
+    WaitAndReadData();
 }
-
-
 
 bool socket::checkAccount(){
     int port = 25;
@@ -100,9 +105,8 @@ bool socket::checkAccount(){
         return false;
     }
     m_socket->write(password.toBase64()+"\r\n");  //写入密码
-       if(WaitAndReadData()=="535"){
-       return false;
+    if(WaitAndReadData()=="535"){
+        return false;
        };
     return true;
-
 }

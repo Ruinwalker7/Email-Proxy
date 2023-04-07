@@ -9,7 +9,7 @@
 #include "QGridLayout"
 #include "controlfiles.h"
 #include "QStringList"
-
+#include "emailreceive.h"
 
 mainWidget::mainWidget(QWidget *parent) :
     QWidget(parent),
@@ -57,12 +57,16 @@ void mainWidget::updateAccounts(){
 
         socket *sc = new socket(user.toUtf8(),password.toUtf8());
         send_email *email = new send_email();
+        EmailReceive *receiver = new EmailReceive();
+
+        receiver->setUserName(user);
         email->setUser(user,password);
+
         connect(write, &QAction::triggered,[=](bool check){
           ui->tabWidget->addTab(email, QString("写邮件"));
          });
         connect(receive, &QAction::triggered,[=](bool check){
-            sc->Pop3_receiver();
+            sc->Pop3_receiver(receiver);
          });
 
         menuSelection->addAction(write);

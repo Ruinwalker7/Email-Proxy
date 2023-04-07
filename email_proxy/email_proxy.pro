@@ -27,16 +27,19 @@ SOURCES += \
     mainwidget.cpp \
 addaccount.cpp\
 socket.cpp\
-    controlfiles.cpp
+    controlfiles.cpp \
+    emailreceive.cpp
 
 HEADERS += \
     send_email.h \
     mainwidget.h \
     addaccount.h \
     socket.h \
-    controlfiles.h
+    controlfiles.h \
+    emailreceive.h
 
 FORMS += \
     send_email.ui \
     mainwidget.ui \
-    addaccount.ui
+    addaccount.ui \
+    emailreceive.ui
