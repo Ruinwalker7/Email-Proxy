@@ -15,7 +15,17 @@ EmailReceive::~EmailReceive()
 
 
 void EmailReceive::setUserName(QString username){
-    _username = username;
+    _userName = username;
+}
+
+bool EmailReceive::isHaveEmail(QByteArray socketReceive)
+{
+
+    return false;
+}
+
+void EmailReceive::analyseEmail(QByteArray emailDetail){
+
 }
 
 int EmailReceive::getEmailNum(QByteArray socketReceive){

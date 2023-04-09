@@ -63,21 +63,26 @@ bool socket::Pop3_receiver(EmailReceive *receiver){
     qDebug() << ReceiverData;
     int emailNumbers = receiver->getEmailNum(ReceiverData);
     qDebug() << emailNumbers;
-    for(int i=0;i<emailNumbers;i++){
-        QString send = "uidl"+QString::number(i)+"\r\n";
+
+    for(int i=1;i<=emailNumbers;i++){
+        QString send = "uidl "+QString::number(i)+"\r\n";
         m_socket->write(send.toUtf8());
         m_socket->waitForReadyRead(1000);
-        QByteArray Data = m_socket->readAll();
-        qDebug() << Data;
+        QByteArray Data = m_socket->readLine();
+
+        qDebug() << Data<<"\n\n";
         if(!receiver->isHaveEmail(Data)){
-            m_socket->write("retr "+i+"\r\n");
-            m_socket->waitForReadyRead(1000);
+            send = "retr "+QString::number(i)+"\r\n";
+            m_socket->write(send.toUtf8());
+            m_socket->waitForReadyRead(4000);
             QByteArray emailData = m_socket->readAll();
+            m_socket->flush();
+            qDebug()<<emailData<<"\n\n\n";
             receiver->analyseEmail(emailData);
         }
     }
     m_socket->write("quit\r\n");
-    WaitAndReadData();
+    m_socket->waitForReadyRead(1000);
 }
 
 bool socket::checkAccount(){
