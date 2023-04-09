@@ -11,6 +11,7 @@ public:
     void saveUser(QString user,QString password);
     static QString dir;
     void updateAccount(QStringList *list);
+    bool isHaveEmail(QString username,QString id);
 private:
 
 };

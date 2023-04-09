@@ -56,7 +56,6 @@ bool socket::Pop3_receiver(EmailReceive *receiver){
     WaitAndReadData();
     m_socket->write("pass "+password+"\r\n");  //写入用户名
     WaitAndReadData();
-
     m_socket->write("stat\r\n");
     m_socket->waitForReadyRead(1000);
     QByteArray ReceiverData = m_socket->readAll();
@@ -75,8 +74,12 @@ bool socket::Pop3_receiver(EmailReceive *receiver){
             send = "retr "+QString::number(i)+"\r\n";
             m_socket->write(send.toUtf8());
             m_socket->waitForReadyRead(4000);
-            QByteArray emailData = m_socket->readAll();
-            m_socket->flush();
+            QByteArray emailData;
+            while(m_socket->bytesAvailable()){
+                emailData.append(m_socket->readAll());
+                m_socket->waitForReadyRead(4000);
+            }
+            qDebug()<<emailData.size();
             qDebug()<<emailData<<"\n\n\n";
             receiver->analyseEmail(emailData);
         }

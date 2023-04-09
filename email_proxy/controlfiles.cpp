@@ -17,6 +17,21 @@ controlFiles::controlFiles()
 
 }
 
+bool controlFiles::isHaveEmail(QString username,QString id){
+    QString dir_str = QApplication::applicationDirPath()+"/data/email/"+username+"/";
+    QDir _dir;
+    if(!_dir.exists(dir_str))
+    {
+        _dir.mkpath(dir_str);
+        return false;
+    }
+    QFile file(dir_str+id+".json");
+    if(file.exists()){
+        return true;
+    }
+    return false;
+}
+
 void controlFiles::saveUser(QString user,QString password){
      QString dir_str = QApplication::applicationDirPath()+"/data/user/";
      QDir _dir;
