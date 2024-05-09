@@ -20,7 +20,7 @@ mainWidget::mainWidget(QWidget *parent) :
     this->updateAccounts();
 
     //连接
-    connect(ui->tabWidget, &QTabWidget::tabCloseRequested,this,&on_tabWidget_tabCloseRequested);
+    connect(ui->tabWidget, &QTabWidget::tabCloseRequested,this,&mainWidget::on_tabWidget_tabCloseRequested);
     connect(ui->add,&QPushButton::clicked,this,&mainWidget::add);
 }
 
